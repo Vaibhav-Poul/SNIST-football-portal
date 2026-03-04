@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sreenidhi AI</title>
+    <style>
+        :root { --primary: #5d5fef; --bg: #f8f9ff; --text: #333; --light-text: #718096; --card-border: #e2e8f0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; background-color: var(--primary); color: var(--text); transition: background 0.3s; height: 100vh; }
+
+        /* --- LOGIN SCREEN (Full Screen) --- */
+        .login-page { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; padding: 20px; box-sizing: border-box; }
+        .login-card { background: white; width: 100%; max-width: 400px; border-radius: 30px; padding: 40px 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); box-sizing: border-box; }
+        .login-card h2 { color: var(--primary); font-size: 28px; margin: 0 0 10px 0; }
+        input { width: 100%; padding: 15px; border: 1px solid #edf2f7; background: #f7fafc; border-radius: 12px; margin-bottom: 20px; box-sizing: border-box; font-size: 15px; }
+        .btn-signin { background: var(--primary); color: white; width: 100%; padding: 15px; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 16px; transition: 0.2s; }
+        .btn-signin:hover { background: #4a4cd9; }
+
+        /* --- DASHBOARD SCREEN (Mobile App Layout) --- */
+        #dashboard { 
+            display: none; 
+            background: var(--bg); 
+            min-height: 100vh; 
+            max-width: 430px; /* Locks it to a phone size */
+            margin: 0 auto; /* Centers it on your computer screen */
+            box-shadow: 0 0 20px rgba(0,0,0,0.15); /* Adds a shadow around the "phone" */
+            position: relative;
+            background-color: #ffffff;
+            padding-bottom: 80px; /* Space for bottom nav */
+        }
+        
+        .dash-header { background: var(--primary); color: white; padding: 30px 20px 40px 20px; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; }
+        .top-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+        .logo-text { font-weight: bold; font-size: 18px; line-height: 1.2; }
+        .logo-text span { background: white; color: var(--primary); padding: 2px 6px; border-radius: 6px; font-size: 14px; }
+        .header-badges { display: flex; gap: 10px; align-items: center; }
+        .star-badge { background: #ffcc00; color: #b8860b; padding: 6px 15px; border-radius: 20px; font-weight: bold; font-size: 14px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 5px; }
+        .logout-btn { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); color: white; padding: 6px 10px; border-radius: 10px; cursor: pointer; font-size: 12px; }
+        
+        .search-bar { background: white; padding: 12px 20px; border-radius: 25px; display: flex; align-items: center; margin-top: 20px; }
+        .search-bar input { border: none; background: transparent; padding: 0; margin: 0 0 0 10px; font-size: 15px; outline: none; }
+
+        .content { padding: 20px; }
+        
+        /* Typography */
+        h3 { font-size: 18px; margin: 25px 0 5px 0; color: #1a202c; }
+        .subtitle { font-size: 13px; color: var(--light-text); margin-bottom: 15px; }
+
+        /* Quick Actions */
+        .qa-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; text-align: center; font-size: 11px; font-weight: 500; color: #4a5568; margin-bottom: 25px; }
+        .qa-item div { font-size: 28px; margin-bottom: 8px; background: #f0f4ff; border-radius: 15px; padding: 10px; display: inline-block; }
+
+        /* Cards */
+        .card { background: white; border: 1px solid var(--card-border); border-radius: 20px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        .card-outline { border: 1.5px solid #d3d9ef; }
+        
+        .attendance-card { display: flex; justify-content: space-between; align-items: center; }
+        .attendance-val { color: var(--primary); font-size: 28px; font-weight: bold; margin-top: 5px; }
+
+        /* Assessment Card specific */
+        .badge { background: #f0f4ff; color: #4a5568; padding: 6px 12px; border-radius: 10px; font-size: 13px; font-weight: 600; display: inline-block; margin-bottom: 15px; }
+        .test-detail { font-size: 13px; color: var(--light-text); margin: 5px 0; }
+        .stats-row { display: flex; gap: 10px; margin: 15px 0; }
+        .stat-pill { border: 1px solid #e2e8f0; padding: 8px 12px; border-radius: 12px; font-size: 12px; color: #4a5568; font-weight: 500; display: flex; align-items: center; gap: 5px; }
+        
+        /* Peer Challenge Card */
+        .peer-challenge { background: linear-gradient(135deg, #ffffff 0%, #fff0f5 100%); border: none; box-shadow: 0 4px 15px rgba(255, 192, 203, 0.2); }
+        .new-badge { background: var(--primary); color: white; padding: 4px 10px; border-radius: 12px; font-size: 10px; font-weight: bold; }
+
+        /* Bottom Navigation */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; max-width: 430px; background: white; display: flex; justify-content: space-around; padding: 10px 0 20px 0; border-top: 1px solid #eee; z-index: 100; }
+        .nav-item { text-align: center; font-size: 11px; color: var(--light-text); font-weight: 500; cursor: pointer; }
+        .nav-item.active { color: var(--primary); }
+        .nav-icon { font-size: 22px; margin-bottom: 4px; }
+    </style>
+</head>
+<body>
+
+    <div id="login-section" class="login-page">
+        <div style="color: white; margin-bottom: 25px; text-align: center;">
+            <h1 style="margin:0; font-size: 32px;">Sreenidhi <span>.ai</span></h1>
+            <p style="margin-top: 5px; opacity: 0.9;">Powered by Edwisely</p>
+        </div>
+        <div class="login-card">
+            <h2>Sign in</h2>
+            <p style="color:var(--light-text); font-size:14px; margin-bottom:25px;">Sign in to get your gateway to personalized education</p>
+            
+            <label style="font-size:14px; font-weight:600; color: #4a5568; display: block; margin-bottom: 8px;">Roll Number</label>
+            <input type="text" id="rollno" placeholder="Type your roll number">
+            
+            <label style="font-size:14px; font-weight:600; color: #4a5568; display: block; margin-bottom: 8px;">Password</label>
+            <input type="password" id="pass" placeholder="Enter password">
+            
+            <button class="btn-signin" onclick="tryLogin()">Sign In</button>
+            <div style="text-align: center; margin-top: 20px; color: var(--primary); font-size: 14px; font-weight: 600; cursor: pointer;">Forgot password?</div>
+        </div>
+    </div>
+
+    <div id="dashboard">
+        <div class="dash-header">
+            <div class="top-row">
+                <div class="logo-text">Sreenidhi <span>.ai</span><br><small style="font-weight:normal; font-size:11px; opacity:0.9;">Powered by Edwisely</small></div>
+                <div class="header-badges">
+                    <div class="star-badge" id="disp-stars">⭐ 0</div>
+                    <button class="logout-btn" onclick="location.reload()">Log out</button>
+                </div>
+            </div>
+            <h1 id="user-name" style="margin: 0 0 5px 0; font-size: 22px; font-weight: 500;">Hello, User</h1>
+            <p id="user-sec" style="margin:0; font-size: 14px; opacity:0.9;">Section</p>
+            
+            <div class="search-bar">
+                <span style="color:#a0aec0; font-size: 18px;">↻</span>
+                <input type="text" placeholder="Search for anything">
+            </div>
+        </div>
+
+        <div class="content">
+            <h3>Quick Actions</h3>
+            <div class="qa-grid">
+                <div class="qa-item"><div>📝</div>Live<br>Assessments</div>
+                <div class="qa-item"><div>🧠</div>Personality<br>Test</div>
+                <div class="qa-item"><div>📊</div>Live<br>Surveys</div>
+                <div class="qa-item"><div>📜</div>Test<br>History</div>
+            </div>
+
+            <div class="card attendance-card">
+                <div>
+                    <div style="font-size: 16px; font-weight: 600; color: #1a202c;">Attendance report</div>
+                    <div style="font-size: 12px; color: var(--light-text); margin-top: 3px;">Cumulative semester attendance(subjects & labs)</div>
+                    <div class="attendance-val" id="disp-att">0%</div>
+                </div>
+                <div style="color: var(--primary); font-size: 24px; font-weight: bold;">→</div>
+            </div>
+
+            <h3>Test from your faculty</h3>
+            <p class="subtitle">Your faculty has sent you a new class test</p>
+            
+            <div class="card card-outline">
+                <div class="badge">Unit-1 Assessment-1</div>
+                <p style="margin: 10px 0; font-size: 14px; color: #a0aec0;">Mr. MUDAVATH RAJU</p>
+                <p class="test-detail">Monday, 02 Mar 2026 | 03:15pm ➔ Wednesday, 04 Mar 2026 | 11:45pm</p>
+                
+                <div class="stats-row">
+                    <div class="stat-pill">🕒 45 min</div>
+                    <div class="stat-pill">📋 8 Questions</div>
+                    <div class="stat-pill">📈 8.0 Marks</div>
+                </div>
+                
+                <p style="color: var(--primary); font-weight: 500; font-size: 14px; margin-bottom: 15px;">Objective</p>
+                <button class="btn-signin" style="padding: 12px; border-radius: 8px;">Take test</button>
+            </div>
+
+            <div class="card peer-challenge">
+                <span class="new-badge">New feature</span>
+                <h3 style="margin: 10px 0 5px 0;">Peer Challenge</h3>
+                <p style="font-size: 13px; color: var(--light-text); margin-bottom: 15px;">Test your knowledge against classmates in our new feature.</p>
+                <div style="color: var(--primary); font-weight: 600; font-size: 14px;">Let's start Challenge →</div>
+            </div>
+            
+            <div style="text-align: center; color: var(--light-text); font-size: 12px; padding: 20px 0;">
+                Roll No: <strong id="disp-roll">-</strong>
+            </div>
+        </div>
+
+        <div class="bottom-nav">
+            <div class="nav-item active"><div class="nav-icon">⌂</div>Home</div>
+            <div class="nav-item"><div class="nav-icon">📖</div>Courses</div>
+            <div class="nav-item"><div class="nav-icon">⊞</div>Classroom</div>
+            <div class="nav-item"><div class="nav-icon">⋮</div>More</div>
+        </div>
+    </div>
+
+    <script>
+        // The Complete SNIST Friends Database
+        const userData = {
+            "25311A6260": { 
+                name: "NITTALA VISWANATH", 
+                attendance: "73.00%", 
+                section: "CSC - A", 
+                stars: "4" 
+            },
+            "25311A6780": { 
+                name: "BODDU SURYATEJA", 
+                attendance: "82.45%", 
+                section: "DATA SCIENCE - B", 
+                stars: "150" 
+            },
+            "23311A05E4": {
+                name: "MERUGU SOURISH",
+                attendance: "68.20%",
+                section: "CSE - C",
+                stars: "342"
+            },
+            "22311A05GD": {
+                name: "VAIBHAV ARJUN POUL",
+                attendance: "51.80%",
+                section: "CSE - H",
+                stars: "890"
+            },
+            "25311A05GA": {
+                name: "CHINNAPAGA SIDDHARTH CHARAN",
+                attendance: "76.50%",
+                section: "CSE - G",
+                stars: "85"
+            },
+            "25311A66M8": {
+                name: "KOTI SHRIMANN RAO",
+                attendance: "88.10%",
+                section: "AIML - D",
+                stars: "215"
+            },
+            "25311A67G4": {
+                name: "Jayashwant Kanala",
+                attendance: "78.40%",
+                section: "DS - C",
+                stars: "112"
+            },
+            "24311A0416": {
+                name: "MOSAM . SRISHANTH",
+                attendance: "85.20%",
+                section: "ECE - A",
+                stars: "450"
+            },
+            "25311A05GK": {
+                name: "MANAS RANJAN PARICHHA",
+                attendance: "62.10%",
+                section: "CSE - G",
+                stars: "89"
+            },
+            "25311A05GE": {
+                name: "MD RIHAN FATIR",
+                attendance: "64.00%",
+                section: "CSE - G",
+                stars: "512"
+            },
+            "25311A6235": {
+                name: "AARYA BANDAM",
+                attendance: "68.75%",
+                section: "Cybersecurity",
+                stars: "230"
+            },
+            "23311A04Q2": {
+                name: "Saharsh Vuppula",
+                attendance: "71.30%",
+                section: "ECE - D",
+                stars: "175"
+            },
+            "22311A0590": {
+                name: "KRITHIK TEJA",
+                attendance: "56.50%",
+                section: "CSE - B",
+                stars: "890"
+            },
+            "23311A0221": {
+                name: "Farhan Mohd",
+                attendance: "55.80%",
+                section: "EEE - A",
+                stars: "42"
+            },
+            "22311A05EY": {
+                name: "SUBRAMANIAN RAWASWAMY",
+                attendance: "83.90%",
+                section: "EEE - B",
+                stars: "610"
+            },
+            "22311A05GK": {
+                name: "Shailik kamsali",
+                attendance: "79.20%",
+                section: "CSE - H",
+                stars: "320"
+            }
+        };
+
+        function tryLogin() {
+            const roll = document.getElementById('rollno').value;
+            if (userData[roll]) {
+                const user = userData[roll];
+                
+                // Hide Login, Show Dashboard
+                document.getElementById('login-section').style.display = 'none';
+                document.getElementById('dashboard').style.display = 'block';
+                
+                // Change the browser background
+                document.body.style.background = "#e2e8f0";
+
+                // Inject Data
+                document.getElementById('user-name').innerText = "Hello, " + user.name;
+                document.getElementById('user-sec').innerText = user.section;
+                document.getElementById('disp-att').innerText = user.attendance;
+                document.getElementById('disp-stars').innerText = "⭐ " + user.stars;
+                document.getElementById('disp-roll').innerText = roll;
+            } else {
+                alert("Incorrect Roll Number! Please check the ID and try again.");
+            }
+        }
+    </script>
+</body>
+</html>
