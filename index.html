@@ -21,12 +21,12 @@
             display: none; 
             background: var(--bg); 
             min-height: 100vh; 
-            max-width: 430px; /* Locks it to a phone size */
-            margin: 0 auto; /* Centers it on your computer screen */
-            box-shadow: 0 0 20px rgba(0,0,0,0.15); /* Adds a shadow around the "phone" */
+            max-width: 430px; 
+            margin: 0 auto; 
+            box-shadow: 0 0 20px rgba(0,0,0,0.15); 
             position: relative;
             background-color: #ffffff;
-            padding-bottom: 80px; /* Space for bottom nav */
+            padding-bottom: 80px; 
         }
         
         .dash-header { background: var(--primary); color: white; padding: 30px 20px 40px 20px; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; }
@@ -37,12 +37,7 @@
         .star-badge { background: #ffcc00; color: #b8860b; padding: 6px 15px; border-radius: 20px; font-weight: bold; font-size: 14px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 5px; }
         .logout-btn { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); color: white; padding: 6px 10px; border-radius: 10px; cursor: pointer; font-size: 12px; }
         
-        .search-bar { background: white; padding: 12px 20px; border-radius: 25px; display: flex; align-items: center; margin-top: 20px; }
-        .search-bar input { border: none; background: transparent; padding: 0; margin: 0 0 0 10px; font-size: 15px; outline: none; }
-
         .content { padding: 20px; }
-        
-        /* Typography */
         h3 { font-size: 18px; margin: 25px 0 5px 0; color: #1a202c; }
         .subtitle { font-size: 13px; color: var(--light-text); margin-bottom: 15px; }
 
@@ -53,7 +48,6 @@
         /* Cards */
         .card { background: white; border: 1px solid var(--card-border); border-radius: 20px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
         .card-outline { border: 1.5px solid #d3d9ef; }
-        
         .attendance-card { display: flex; justify-content: space-between; align-items: center; }
         .attendance-val { color: var(--primary); font-size: 28px; font-weight: bold; margin-top: 5px; }
 
@@ -108,10 +102,40 @@
             <h1 id="user-name" style="margin: 0 0 5px 0; font-size: 22px; font-weight: 500;">Hello, User</h1>
             <p id="user-sec" style="margin:0; font-size: 14px; opacity:0.9;">Section</p>
             
-            <div class="search-bar">
-                <span style="color:#a0aec0; font-size: 18px;">↻</span>
-                <input type="text" placeholder="Search for anything">
+            <div style="text-align: center; margin-top: 15px;">
+                <div onclick="toggleProfileDetails()" style="cursor: pointer; display: inline-flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.2); padding: 8px 15px; border-radius: 20px; font-size: 13px; font-weight: 500; transition: 0.3s; user-select: none;">
+                    More Profile Details
+                    <span id="arrow-icon" style="margin-left: 8px; font-size: 10px; transition: transform 0.3s;">▼</span>
+                </div>
             </div>
+
+            <div id="extra-details-box" style="display: none; background: white; color: #333; padding: 15px; border-radius: 15px; margin-top: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); text-align: left; font-size: 13px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px; border-bottom: 1px solid #eee; padding-bottom: 5px;">
+                    <span style="color: #718096;">Name</span>
+                    <strong id="det-name">-</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px; border-bottom: 1px solid #eee; padding-bottom: 5px;">
+                    <span style="color: #718096;">Roll No</span>
+                    <strong id="det-roll">-</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px; border-bottom: 1px solid #eee; padding-bottom: 5px;">
+                    <span style="color: #718096;">Course / Branch</span>
+                    <strong id="det-branch">-</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px; border-bottom: 1px solid #eee; padding-bottom: 5px;">
+                    <span style="color: #718096;">Date Of Birth</span>
+                    <strong id="det-dob">-</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px; border-bottom: 1px solid #eee; padding-bottom: 5px;">
+                    <span style="color: #718096;">Father's Name</span>
+                    <strong id="det-father">-</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span style="color: #718096;">Course Duration</span>
+                    <strong id="det-duration">-</strong>
+                </div>
+            </div>
+
         </div>
 
         <div class="content">
@@ -171,110 +195,178 @@
     </div>
 
     <script>
-        // The Complete SNIST Friends Database
         const userData = {
+            "25311A6780": { name: "BODDU SURYATEJA", attendance: "82.45%", section: "DATA SCIENCE - B", stars: "150" },
+            "23311A05E4": { name: "MERUGU SOURISH", attendance: "58.20%", section: "CSE - C", stars: "342" },
+            "22311A05GD": { name: "VAIBHAV ARJUN POUL", attendance: "63.33%", section: "CSE - H", stars: "890" },
+            "25311A05GA": { name: "CHINNAPAGA SIDDHARTH CHARAN", attendance: "76.50%", section: "CSE - G", stars: "85" },
+            "25311A66M8": { name: "KOTI SHRIMANN RAO", attendance: "78.10%", section: "AIML - D", stars: "215" },
+            "25311A67G4": { name: "Jayashwant Kanala", attendance: "78.40%", section: "DS - C", stars: "112" },
+            "24311A0416": { name: "MOSAM . SRISHANTH", attendance: "65.20%", section: "ECE - A", stars: "450" },
+            "25311A05GK": { name: "MANAS RANJAN PARICHHA", attendance: "82.10%", section: "CSE - G", stars: "89" },
+            "25311A05GE": { name: "MD RIHAN FATIR", attendance: "77.67%", section: "CSE - G", stars: "512" },
+            "25311A6235": { name: "AARYA BANDAM", attendance: "68.75%", section: "Cybersecurity", stars: "230" },
+            "23311A04Q2": { name: "Saharsh Vuppula", attendance: "51.30%", section: "ECE - D", stars: "175" },
+            "22311A0590": { name: "KRITHIK TEJA", attendance: "28.50%", section: "CSE - B", stars: "890" },
+            "23311A0221": { name: "Farhan Mohd", attendance: "62.80%", section: "EEE - A", stars: "42" },
+            "22311A05EY": { name: "SUBRAMANIAN RAWASWAMY", attendance: "73.90%", section: "EEE - B", stars: "610" },
+            "24311A0590": { name: "ENNI TEERTH", attendance: "79.40%", section: "CSE - F", stars: "90430" },
+            "24311A0560": { name: "J DASARATH REDDY", attendance: "24.32%", section: "CSE - F", stars: "90430" },
+            "22311A6652": { name: "KOPPULA VISHNU VARDHAN REDDY", attendance: "48.73%", section: "MECH - B", stars: "90430" },
+            "22311A05FN": { 
+                name: "E RENISH", 
+                attendance: "65.73%", 
+                section: "CSE - B", 
+                branch: "B.Tech / CSE",
+                dob: "11.06.2003",
+                father: "EKN SWAROOP",
+                duration: "2022-2026",
+                stars: "94430" 
+            },
+            
+            // --- NEWLY UPDATED PROFILES BELOW ---
+
+            "23311A05GD": { 
+                name: "RACHARLA SANJAY", 
+                attendance: "63.73%", 
+                section: "EEE", 
+                branch: "B.Tech / EEE",
+                dob: "10.09.2004",
+                father: "RACHARLA VIJAYA RAJU",
+                duration: "2023-2027",
+                stars: "90430" 
+            },
+            "22311A05GK": { 
+                name: "Shailik Kamsali", 
+                attendance: "71.20%", 
+                section: "CSE - H", 
+                branch: "B.Tech / CSE",
+                dob: "20.04.2004",
+                father: "SRIKANTH KAMSALI",
+                duration: "2022-2026",
+                stars: "320" 
+            },
+            "22311A0528": { 
+                name: "MOHD ABDUL SATTAR MEHARAJ", 
+                attendance: "51.73%", 
+                section: "ECE", 
+                branch: "B.Tech / ECE",
+                dob: "18.06.2004",
+                father: "MOHAMMED ABDUL KHADER",
+                duration: "2022-2026",
+                stars: "90430" 
+            },
             "25311A6260": { 
                 name: "NITTALA VISWANATH", 
-                attendance: "73.00%", 
+                attendance: "65.73%", 
                 section: "CSC - A", 
-                stars: "4" 
+                branch: "B.Tech / CSC",
+                dob: "14.12.2006",
+                father: "NITTALA SIVA KRISHNA PRASAD",
+                duration: "2025-2029",
+                stars: "43564" 
+            },
+            "24311A0590": { 
+                name: "ENNI TEERTH", 
+                attendance: "79.40%", 
+                section: "CSE - F", 
+                branch: "B.Tech / CSE",
+                dob: "26.08.2006",
+                father: "EKN SWAROOP",
+                duration: "2024-2028",
+                stars: "90430" 
+            },
+            "22311A05GD": { 
+                name: "VAIBHAV ARJUN POUL", 
+                attendance: "63.33%", 
+                section: "CSE - H", 
+                branch: "B.Tech / CSE",
+                dob: "17.09.2003",
+                father: "ARJUN POUL",
+                duration: "2022-2026",
+                stars: "890" 
+            },
+            "22311A6652": { 
+                name: "KOPPULA VISHNU VARDHAN", 
+                attendance: "48.73%", 
+                section: "MECH - B", 
+                branch: "B.Tech / Mech",
+                dob: "08.03.2003",
+                father: "RAMANA REDDY",
+                duration: "2022-2026",
+                stars: "90430" 
+            },
+            "24311A0560": { 
+                name: "J DASARATH REDDY", 
+                attendance: "24.32%", 
+                section: "CSE - F", 
+                branch: "B.Tech / CSE",
+                dob: "11.11.2005",
+                father: "J DURJIYADHAN REDDY",
+                duration: "2024-2028",
+                stars: "90430" 
+            },
+            "22311A0590": { 
+                name: "THALLAPARTHI KRITHIK TEJA", 
+                attendance: "28.50%", 
+                section: "CSE - B", 
+                branch: "B.Tech / CSE",
+                dob: "02.01.2005",
+                father: "T MURALI KRISHNA",
+                duration: "2022-2026",
+                stars: "890" 
+            },
+            "25311A6260": { 
+                name: "AARYA BANDAM", 
+                attendance: "68.75%", 
+                section: "CSE - B", 
+                branch: "B.Tech / CSE",
+                dob: "20.09.2007",
+                father: "SANTOSH KUMAR BANDAM",
+                duration: "2025-2029",
+                stars: "230" 
+            },
+            "25311A05GK": { 
+                name: "MANAS RANJAN PARICHHA", 
+                attendance: "82.10%", 
+                section: "CSE - G", 
+                branch: "B.Tech / CSE",
+                dob: "08.12.2007",
+                father: "MANOJ KUMAR PARICHHA",
+                duration: "2025-2029",
+                stars: "8290" 
+            },
+            "23311A04Q2": { 
+                name: "SAHARSH SAM VUPPULA", 
+                attendance: "51.30%", 
+                section: "ECE - D", 
+                branch: "B.Tech / ECE",
+                dob: "20.03.2006",
+                father: "VUPPULA JOEL",
+                duration: "2023-2027",
+                stars: "175" 
             },
             "25311A6780": { 
                 name: "BODDU SURYATEJA", 
                 attendance: "82.45%", 
                 section: "DATA SCIENCE - B", 
+                branch: "B.Tech / DS",
+                dob: "12.05.2007",
+                father: "DODDU SEKHAR",
+                duration: "2025-2029",
                 stars: "150" 
             },
-            "23311A05E4": {
-                name: "MERUGU SOURISH",
-                attendance: "68.20%",
-                section: "CSE - C",
-                stars: "342"
-            },
-            "22311A05GD": {
-                name: "VAIBHAV ARJUN POUL",
-                attendance: "51.80%",
-                section: "CSE - H",
-                stars: "890"
-            },
-            "25311A05GA": {
-                name: "CHINNAPAGA SIDDHARTH CHARAN",
-                attendance: "76.50%",
-                section: "CSE - G",
-                stars: "85"
-            },
-            "25311A66M8": {
-                name: "KOTI SHRIMANN RAO",
-                attendance: "88.10%",
-                section: "AIML - D",
-                stars: "215"
-            },
-            "25311A67G4": {
-                name: "Jayashwant Kanala",
-                attendance: "78.40%",
-                section: "DS - C",
-                stars: "112"
-            },
-            "24311A0416": {
-                name: "MOSAM . SRISHANTH",
-                attendance: "85.20%",
-                section: "ECE - A",
-                stars: "450"
-            },
-            "25311A05GK": {
-                name: "MANAS RANJAN PARICHHA",
-                attendance: "62.10%",
-                section: "CSE - G",
-                stars: "89"
-            },
-            "25311A05GE": {
-                name: "MD RIHAN FATIR",
-                attendance: "64.00%",
-                section: "CSE - G",
-                stars: "512"
-            },
-            "25311A6235": {
-                name: "AARYA BANDAM",
-                attendance: "68.75%",
-                section: "Cybersecurity",
-                stars: "230"
-            },
-            "23311A04Q2": {
-                name: "Saharsh Vuppula",
-                attendance: "71.30%",
-                section: "ECE - D",
-                stars: "175"
-            },
-            "22311A0590": {
-                name: "KRITHIK TEJA",
-                attendance: "26.50%",
-                section: "CSE - B",
-                stars: "890"
-            },
-            "23311A0221": {
-                name: "Farhan Mohd",
-                attendance: "55.80%",
-                section: "EEE - A",
-                stars: "42"
-            },
-            "22311A05EY": {
-                name: "SUBRAMANIAN RAWASWAMY",
-                attendance: "83.90%",
-                section: "EEE - B",
-                stars: "610"
-            },
-            "22311A05GK": {
-                name: "Shailik kamsali",
-                attendance: "79.20%",
-                section: "CSE - H",
-                stars: "320"
-            },
-            "24311A0590": {
-                name: "ENNI TEERTH",
-                attendance: "29.00%",
-                section: "CSE - F",
-                stars: "90430"
-            },
+            "23311A0221": { 
+                name: "FARHAN MOHAMMED", 
+                attendance: "62.80%", 
+                section: "EEE - A", 
+                branch: "B.Tech / EEE",
+                dob: "01.06.2006",
+                father: "MOHAMMED IMRAN",
+                duration: "2023-2027",
+                stars: "42" 
+            }
+             
         };
 
         function tryLogin() {
@@ -285,18 +377,42 @@
                 // Hide Login, Show Dashboard
                 document.getElementById('login-section').style.display = 'none';
                 document.getElementById('dashboard').style.display = 'block';
-                
-                // Change the browser background
                 document.body.style.background = "#e2e8f0";
 
-                // Inject Data
+                // Inject Standard Data
                 document.getElementById('user-name').innerText = "Hello, " + user.name;
                 document.getElementById('user-sec').innerText = user.section;
                 document.getElementById('disp-att').innerText = user.attendance;
                 document.getElementById('disp-stars').innerText = "⭐ " + user.stars;
                 document.getElementById('disp-roll').innerText = roll;
+
+                // Inject Expanded Profile Data (Use 'N/A' if missing for other friends)
+                document.getElementById('det-name').innerText = user.name;
+                document.getElementById('det-roll').innerText = roll;
+                document.getElementById('det-branch').innerText = user.branch || user.section;
+                document.getElementById('det-dob').innerText = user.dob || "Not provided";
+                document.getElementById('det-father').innerText = user.father || "Not provided";
+                document.getElementById('det-duration').innerText = user.duration || "Not provided";
+
+                // Ensure the details box is hidden on a fresh login
+                document.getElementById('extra-details-box').style.display = 'none';
+                document.getElementById('arrow-icon').style.transform = 'rotate(0deg)';
+
             } else {
                 alert("Incorrect Roll Number! Please check the ID and try again.");
+            }
+        }
+
+        // TOGGLE FUNCTION FOR THE PROFILE DETAILS BOX
+        function toggleProfileDetails() {
+            const box = document.getElementById('extra-details-box');
+            const icon = document.getElementById('arrow-icon');
+            if (box.style.display === 'none') {
+                box.style.display = 'block';
+                icon.style.transform = 'rotate(180deg)'; // Flips the arrow upside down
+            } else {
+                box.style.display = 'none';
+                icon.style.transform = 'rotate(0deg)'; // Flips it back
             }
         }
     </script>
